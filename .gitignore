@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+.sema/
+
+# 构建产物由 GitHub Actions 生成，不提交
+gpt6-demo/dist/

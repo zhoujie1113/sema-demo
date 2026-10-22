@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>落日海岸 · Sunset Coast</title>
+    <meta name="description" content="浏览器实时 3D 驾驶 demo：从汽车旅馆停车场开到海边交付点。" />
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
+
+    <!-- ============ 载入 ============ -->
+    <div id="boot" class="overlay">
+      <div class="boot-box">
+        <div class="brand">落日海岸<em>SUNSET COAST</em></div>
+        <div class="bar"><i id="boot-bar"></i></div>
+        <div id="boot-text" class="boot-text">正在准备渲染器…</div>
+        <div id="boot-err" class="boot-err" hidden>
+          <p>以下资源加载失败，游戏无法继续：</p>
+          <ul id="boot-err-list"></ul>
+          <button id="boot-retry" class="btn btn-primary">重试</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 开始页 ============ -->
+    <div id="start" class="overlay start" hidden>
+      <div class="start-art"></div>
+      <div class="start-panel">
+        <div class="kicker">海滨送件 · 傍晚 18:40</div>
+        <h1>落日海岸</h1>
+        <p class="sub">SUNSET COAST</p>
+        <p class="desc">
+          车停在落日旅馆的停车场，箱子在后备箱。<br />
+          沿着海滨大街向东，穿过两个检查点，把货送到海边停车区。
+        </p>
+        <button id="start-btn" class="btn btn-primary big">开始游戏</button>
+        <div class="keys">
+          <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>油门 / 转向 / 刹车倒车</span></div>
+          <div><kbd>Space</kbd><span>手刹</span></div>
+          <div><kbd>R</kbd><span>复位到安全位置</span></div>
+          <div><kbd>E</kbd><span>接单 / 交付</span></div>
+          <div><kbd>Esc</kbd><span>暂停</span></div>
+        </div>
+        <p class="tiny">键盘操作，桌面 Chrome / Edge。建议开启声音。</p>
+      </div>
+    </div>
+
+    <!-- ============ 游戏内 HUD ============ -->
+    <div id="hud" class="hud" hidden>
+      <div class="mission" id="mission-card">
+        <div class="m-top">
+          <span class="pill" id="m-state">待出发</span>
+          <span class="m-timer" id="m-timer">00:00.0</span>
+        </div>
+        <div class="m-title" id="m-title">落日旅馆 · 停车场</div>
+        <div class="m-obj" id="m-obj">按 E 确认送件任务</div>
+        <div class="m-steps" id="m-steps"></div>
+      </div>
+
+      <div class="right-col">
+        <div class="map-wrap">
+          <canvas id="minimap" width="220" height="220"></canvas>
+          <div class="map-n">海</div>
+        </div>
+        <div class="speedo">
+          <b id="speed">0</b><span>km/h</span>
+          <i id="gear">N</i>
+        </div>
+      </div>
+
+      <div class="hint" id="hint" hidden></div>
+      <div class="toast" id="toast" hidden></div>
+
+      <button class="sound" id="sound-btn" title="静音 / 取消静音" aria-label="静音切换">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M4 9h3l4-4v14l-4-4H4z" fill="currentColor"></path>
+          <path class="wave" d="M15 8.5a5 5 0 0 1 0 7M17.6 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"></path>
+          <path class="cross" d="M15 9l5 6M20 9l-5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" style="display:none"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ============ 暂停 ============ -->
+    <div id="pause" class="overlay menu" hidden>
+      <div class="panel">
+        <h2>已暂停</h2>
+        <p class="muted" id="pause-sub">计时与音效已同步暂停</p>
+        <div class="btn-col">
+          <button class="btn btn-primary" id="resume-btn">继续游戏</button>
+          <button class="btn" id="pause-restart">重新挑战</button>
+          <button class="btn" id="pause-help">操作说明</button>
+        </div>
+        <div class="help" id="pause-helpbox" hidden>
+          <div><kbd>W</kbd> / <kbd>↑</kbd> 加速</div>
+          <div><kbd>S</kbd> / <kbd>↓</kbd> 刹车 · 倒车</div>
+          <div><kbd>A</kbd> <kbd>D</kbd> / <kbd>←</kbd> <kbd>→</kbd> 转向</div>
+          <div><kbd>Space</kbd> 手刹</div>
+          <div><kbd>R</kbd> 车辆复位</div>
+          <div><kbd>E</kbd> 接单 / 交付</div>
+          <div><kbd>Esc</kbd> 暂停 / 恢复</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 结算 ============ -->
+    <div id="result" class="overlay menu" hidden>
+      <div class="panel result">
+        <div class="kicker">任务完成</div>
+        <h2>送达海边</h2>
+        <div class="time-big" id="res-time">00:00.0</div>
+        <div class="res-rows">
+          <div><span>检查点</span><b id="res-cp">2 / 2</b></div>
+          <div><span>碰撞次数</span><b id="res-hit">0</b></div>
+          <div><span>最高车速</span><b id="res-top">0 km/h</b></div>
+        </div>
+        <div class="btn-col">
+          <button class="btn btn-primary" id="res-again">重新挑战</button>
+          <button class="btn" id="res-free">自由驾驶</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="fade" class="fade"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

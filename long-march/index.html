@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>长征·征途 — 中央红军长征路线互动课堂</title>
+<meta name="description" content="以中央红军长征路线为主线的中文交互式历史课堂：总览地图、五个阶段、关键节点事件详情与教师演示模式。路线示意图，非精确测绘。">
+<link rel="stylesheet" href="assets/css/style.css?v=20261022c">
+</head>
+<body data-view="overview" data-present="false">
+<a class="skip-link" href="#map-frame">跳到路线地图</a>
+
+<div class="app" id="app">
+  <header class="topbar" id="topbar">
+    <a class="brand" href="#" data-action="home" aria-label="返回全程总览">
+      <span class="seal" aria-hidden="true">征</span>
+      <span class="brand-text">
+        <strong>长征<span class="mid">·</span>征途</strong>
+        <small>中央红军长征路线 · 历史课堂</small>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <p class="topbar-note">路线示意图，非精确测绘</p>
+      <button class="btn ghost" type="button" data-action="about">课堂说明</button>
+      <button class="btn solid" type="button" data-action="present">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 4h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 20h6M12 16v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        演示模式
+      </button>
+    </div>
+  </header>
+
+  <main class="main" id="main">
+    <aside class="side" id="side">
+      <section class="side-panel side-home" id="side-home">
+        <figure class="hero-card">
+          <img src="assets/img/hero.jpg" alt="手绘山峦、河流与红色行军路线的装饰插画（场景示意）">
+          <figcaption>
+            <span class="hero-kicker">1934.10 — 1935.10</span>
+            <h1 class="hero-title">长征<span class="mid">·</span>征途</h1>
+          </figcaption>
+        </figure>
+        <p class="lead">从于都河到吴起镇。沿着中央红军的足迹，看懂一场远征的时间、地理与抉择。</p>
+        <ul class="fact-row" id="fact-row"></ul>
+        <div class="stage-list" id="stage-list" aria-label="五个阶段"></div>
+        <div class="home-actions">
+          <button class="btn solid" type="button" data-action="play-stage">逐步显示全程</button>
+          <button class="btn ghost" type="button" data-action="show-all">一键显示全程</button>
+        </div>
+        <p class="scope-note">
+          本站以<strong>中央红军（红一方面军）</strong>1934.10—1935.10 为主线。长征是红军各部的共同远征；1936年10月三大主力会师，长征胜利结束。
+          <button class="link" type="button" data-action="about">展开说明</button>
+        </p>
+      </section>
+
+      <section class="side-panel side-stage" id="side-stage" aria-live="polite"></section>
+    </aside>
+
+    <div class="map-frame" id="map-frame">
+      <svg id="map" class="map" viewBox="0 0 1200 1000" preserveAspectRatio="xMidYMid meet" role="group" aria-label="中央红军长征路线示意地图，可点击阶段路线与节点"></svg>
+      <div class="map-edge" aria-hidden="true"></div>
+
+      <div class="present-title" id="present-title" aria-live="polite"></div>
+
+      <div class="mini-map" id="mini-map-wrap" aria-label="全程位置小地图">
+        <svg id="mini-map" viewBox="0 0 1200 1000" aria-hidden="true"></svg>
+        <p>全程位置</p>
+      </div>
+
+      <div class="map-legend" id="map-legend">
+        <div class="legend-head"><span>图例</span><button class="icon-btn small" type="button" data-action="toggle-legend" aria-label="收起图例">−</button></div>
+        <ul class="legend-list">
+          <li><span class="lg-line" style="--c:#b23a2f"></span>阶段路线（5 段）</li>
+          <li><span class="lg-dot"></span>重要节点 / 渡口</li>
+          <li><span class="lg-mtn"></span>山脉 <span class="lg-river"></span>河流</li>
+          <li><span class="lg-arrow"></span>行进方向</li>
+        </ul>
+        <p class="legend-note">动画只表示行进顺序，<br>不代表真实行军速度与距离比例。</p>
+      </div>
+
+      <div class="map-tools">
+        <button class="map-tool" type="button" data-action="zoom-in" aria-label="放大">＋</button>
+        <button class="map-tool" type="button" data-action="zoom-out" aria-label="缩小">−</button>
+        <button class="map-tool" type="button" data-action="reset-view" aria-label="复位视图">⌂</button>
+      </div>
+
+      <div class="compass" aria-hidden="true">
+        <svg viewBox="0 0 80 80" width="72" height="72">
+          <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(72,56,36,.35)" stroke-width="1"/>
+          <circle cx="40" cy="40" r="24" fill="none" stroke="rgba(72,56,36,.18)" stroke-width="1" stroke-dasharray="2 4"/>
+          <path d="M40 9 L45 40 L40 35 L35 40 Z" fill="#a8342a"/>
+          <path d="M40 71 L35 40 L40 45 L45 40 Z" fill="rgba(72,56,36,.35)"/>
+          <text x="40" y="7" text-anchor="middle" font-size="9" fill="#6b5b45" font-family="serif">N</text>
+        </svg>
+      </div>
+
+      <div class="scalebar">
+        <span class="bar"></span>
+        <span class="txt">约 300 公里 · 示意比例</span>
+      </div>
+
+      <div class="map-disclaimer">路线示意图 · 非精确测绘 · 省界未绘</div>
+
+      <div class="node-strip" id="node-strip" aria-label="本阶段关键节点"></div>
+
+      <div class="play-hud" id="play-hud" aria-live="polite">
+        <span class="hud-stage" id="hud-stage"></span>
+        <strong class="hud-place" id="hud-place"></strong>
+        <span class="hud-date" id="hud-date"></span>
+      </div>
+
+      <div class="present-bar" id="present-bar">
+        <div class="pb-left">
+          <span class="pb-badge" id="pb-badge">全程总览</span>
+          <span class="pb-hint">← → 切换阶段 · 空格 播放/暂停 · F 全屏</span>
+        </div>
+        <div class="pb-center">
+          <button class="pb-btn" type="button" data-action="prev-stage" aria-label="上一阶段" title="上一阶段">←</button>
+          <button class="pb-btn" type="button" data-action="replay" aria-label="重播" title="重播">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 10a8 8 0 1 1 2.3 6.3M4 4v6h6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="pb-btn primary" type="button" data-action="toggle-play" id="btn-play" aria-label="逐步显示路线" title="逐步显示路线（空格）">
+            <svg class="ic-play" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>
+            <svg class="ic-pause" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 5h3v14H8zM14 5h3v14h-3z" fill="currentColor"/></svg>
+          </button>
+          <button class="pb-btn" type="button" data-action="next-stage" aria-label="下一阶段" title="下一阶段">→</button>
+          <button class="pb-btn wide" type="button" data-action="show-all" title="一键显示全程">一键全程</button>
+        </div>
+        <div class="pb-right">
+          <button class="pb-btn" type="button" data-action="home">返回全程</button>
+          <button class="pb-btn" type="button" data-action="exit-present">退出演示</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="timeline" id="timeline">
+      <div class="tl-meta">
+        <span class="tl-year">1934.10</span>
+        <span class="tl-title">中央红军长征 · 五阶段时间轴 <em>（按阶段等分，非等比例）</em></span>
+        <span class="tl-year">1935.10</span>
+      </div>
+      <div class="tl-track" id="tl-track"></div>
+    </footer>
+  </main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="d-name" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="drawer-title">
+      <span class="drawer-eyebrow" id="d-eyebrow"></span>
+      <h2 id="d-name"></h2>
+      <p class="drawer-meta" id="d-meta"></p>
+    </div>
+    <button class="icon-btn close" type="button" data-action="close-drawer" aria-label="关闭详情">×</button>
+  </div>
+  <div class="drawer-body" id="drawer-body">
+    <figure class="drawer-figure" id="d-figure">
+      <img id="d-img" src="assets/img/scene-xiangjiang.jpg" alt="场景示意插画">
+      <figcaption id="d-caption">场景示意插画</figcaption>
+    </figure>
+    <div class="drawer-scope"><span></span>中央红军主线 · 关键节点</div>
+    <section class="d-section"><h3>事件经过</h3><p id="d-passage"></p></section>
+    <section class="d-section"><h3>面临的困难</h3><p id="d-difficulty"></p></section>
+    <section class="d-section"><h3>历史意义</h3><p id="d-significance"></p></section>
+    <section class="d-section terrain"><h3>地形与路线选择</h3><p id="d-terrain"></p></section>
+    <div class="question-box"><span class="q-tag">想一想</span><p id="d-question"></p></div>
+    <a class="source-link" id="d-source" href="#" target="_blank" rel="noopener noreferrer">
+      <span class="src-label">史料来源</span>
+      <span class="src-title"></span>
+      <span class="src-arrow" aria-hidden="true">↗</span>
+    </a>
+    <p class="figure-note">页面插画为 AI 手绘风格场景示意，不是历史照片；地名、路线与时间均为可编辑文字图层。</p>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn ghost" type="button" data-action="prev-node">← 上一节点</button>
+    <span class="node-counter" id="d-counter"></span>
+    <button class="btn ghost" type="button" data-action="next-node">下一节点 →</button>
+  </div>
+</aside>
+
+<div class="modal" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true">
+  <div class="modal-head">
+    <h2 id="about-title">课堂说明与史料</h2>
+    <button class="icon-btn close" type="button" data-action="close-about" aria-label="关闭说明">×</button>
+  </div>
+  <div class="modal-body">
+    <h3>展示范围</h3>
+    <p>本站以<strong>中央红军（红一方面军）</strong>1934年10月—1935年10月的长征为主线，展示中央红军主力的路线、阶段与重要节点。长征是红军多支队伍的共同远征：红二十五军于1934年11月从河南罗山出发，1935年9月到达陕北；红四方面军于1935年春强渡嘉陵江，开始长征；红二、红六军团于1935年11月从湖南桑植出发。1936年10月，红军三大主力在甘肃会宁、宁夏西吉将台堡会师，长征胜利结束。</p>
+    <h3>五个阶段怎样划分</h3>
+    <p>依据中共中央党史和文献研究院《长征二十夜》专题及《光明日报》档案文章所载史实，按战略方向与重大转折，将中央红军主线划分为：突围西进（1934.10.10—12.01）、转兵贵州（1934.12.02—1935.01.17）、四渡赤水（1935.01.18—05.09）、雪山草地（1935.05.10—09.11）、奠基陕北（1935.09.12—10.19）。<em>这是本站为课堂教学所作的阶段划分，不是唯一的历史分期。</em></p>
+    <h3>路线与地图</h3>
+    <p>地图为示意性历史地图：地名按经纬度定位，路线依主要经过地点连线并作平滑处理；省界未绘，山脉、河流经过概括。所有坐标、路线、地名和时间均为可编辑的文字与矢量图层。<strong>请勿将本图用于距离测量或精确导航。</strong></p>
+    <h3>插画说明</h3>
+    <p>页面中的山峦、渡口、雪山草地与陕北高原插画，均由图像生成工具制作，标注为“场景示意”，<strong>不是历史照片</strong>，也不用于还原具体人物的相貌与服装细节。</p>
+    <h3>教师演示</h3>
+    <ul class="modal-list">
+      <li><strong>← / →</strong>：切换上一阶段、下一阶段；在总览页按 → 进入第一阶段。</li>
+      <li><strong>空格</strong>：播放 / 暂停“逐步显示路线”；<strong>R</strong>：重播本阶段。</li>
+      <li><strong>F</strong>：进入或退出全屏；<strong>Esc</strong>：关闭详情 / 退出演示。</li>
+      <li><strong>G</strong>：一键显示全程；<strong>Home</strong>：返回全程总览。</li>
+    </ul>
+    <h3>主要史料来源</h3>
+    <ul class="source-list" id="source-list"></ul>
+    <p class="modal-foot">历史叙述以公开党史资料为依据；对无法确认的路线细节保持概括，不虚构精确坐标、引语或史料。</p>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/data.js?v=20261022c"></script>
+<script src="assets/js/map.js?v=20261022c"></script>
+<script src="assets/js/app.js?v=20261022c"></script>
+</body>
+</html>

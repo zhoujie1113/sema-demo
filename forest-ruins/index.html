@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07110b" />
+  <meta name="description" content="森林遗迹：一款推箱子解谜绘本游戏。推亮机关，开启林间之门。" />
+  <title>森林遗迹 · 推箱解谜绘本</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true">
+    <div class="bg-image"></div>
+    <div class="bg-veil"></div>
+    <div class="bg-fog"></div>
+    <div class="ambient-lights" id="ambientLights"></div>
+  </div>
+
+  <div class="app">
+    <header class="site-header">
+      <div class="brand">
+        <div class="sigil" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 6c8 5 13 12 13 19 0 8-6 14-13 17C17 39 11 33 11 25c0-7 5-14 13-19Z" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M24 13v22M24 22c4-2 6-5 7-8M24 28c-4-2-6-5-7-8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <p class="eyebrow">森语绘卷 · 第一章</p>
+          <h1>森林遗迹</h1>
+          <p class="subtitle">推亮沉睡的机关，唤醒林间之门</p>
+        </div>
+      </div>
+      <button class="sound-toggle" id="soundToggle" type="button" aria-label="关闭音效" aria-pressed="true" title="音效开关">
+        <svg class="sound-on" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M15.5 9c1.1 1.6 1.1 4.4 0 6M18.5 6.5c2.2 3 2.2 8 0 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg class="sound-off" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="m15.5 9.5 5 5m0-5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <main class="layout">
+      <section class="play-column" aria-label="解谜棋盘">
+        <div class="board-stage">
+          <div class="board-frame">
+            <div class="frame-inner">
+              <div class="board" id="board" role="application" aria-label="森林遗迹棋盘，使用方向键移动角色">
+                <div class="tile-layer" id="tileLayer"></div>
+                <div class="entity-layer" id="entityLayer"></div>
+                <div class="fx-layer" id="fxLayer"></div>
+              </div>
+            </div>
+            <div class="deco deco-fern" aria-hidden="true"><img src="assets/fern.png" alt="" /></div>
+            <div class="deco deco-mushroom" aria-hidden="true"><img src="assets/mushrooms.png" alt="" /></div>
+            <div class="deco deco-rock" aria-hidden="true"><img src="assets/rocks.png" alt="" /></div>
+            <div class="deco deco-fly" aria-hidden="true"><img src="assets/firefly.png" alt="" /></div>
+          </div>
+
+          <div class="board-caption">
+            <span class="caption-line"></span>
+            <span id="boardCaption">苔痕初醒 · 第 01 处遗迹</span>
+            <span class="caption-line"></span>
+          </div>
+        </div>
+
+        <div class="control-deck">
+          <div class="dpad" role="group" aria-label="方向按钮">
+            <button class="dbtn up" type="button" data-dir="U" aria-label="向上移动">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="dbtn left" type="button" data-dir="L" aria-label="向左移动">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="dpad-core" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none"><path d="M16 5c5 3.5 8 8 8 12.5 0 5-3.7 8.8-8 10.5-4.3-1.7-8-5.5-8-10.5C8 13 11 8.5 16 5Z" stroke="currentColor" stroke-width="1.2"/><path d="M16 11v14M16 17c2.5-1 4-2.8 4.6-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            <button class="dbtn right" type="button" data-dir="R" aria-label="向右移动">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="dbtn down" type="button" data-dir="D" aria-label="向下移动">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 10 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <div class="action-stack">
+            <button class="action-btn" id="undoBtn" type="button">
+              <span class="action-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M9 8H5v-4M5.5 8.2A8 8 0 1 1 4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="action-label">撤销<kbd>U</kbd></span>
+            </button>
+            <button class="action-btn" id="resetBtn" type="button">
+              <span class="action-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="action-label">重置<kbd>R</kbd></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <section class="level-card" aria-labelledby="levelName">
+          <div class="card-top">
+            <p class="kicker"><span class="kicker-dot"></span><span id="levelKicker">第 01 处遗迹</span></p>
+            <span class="gate-badge" id="gateBadge">门扉沉睡</span>
+          </div>
+          <h2 id="levelName">苔痕初醒</h2>
+          <p class="flavor" id="levelFlavor">潮湿的青苔上，第一缕微光正在苏醒。</p>
+
+          <div class="rune-meter">
+            <div class="pips" id="pips" aria-hidden="true"></div>
+            <div class="meter-label"><span id="litCount">0</span> / <span id="totalCount">2</span> 机关点亮</div>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><strong id="moveCount">0</strong><span>步数</span></div>
+            <div class="stat"><strong id="pushCount">0</strong><span>推动</span></div>
+            <div class="stat"><strong id="bestCount">—</strong><span>最佳</span></div>
+          </div>
+        </section>
+
+        <section class="level-select" aria-labelledby="trailTitle">
+          <div class="section-head">
+            <h3 id="trailTitle">遗迹回廊</h3>
+            <span class="trail-progress" id="trailProgress">1 / 5</span>
+          </div>
+          <div class="level-chips" id="levelChips"></div>
+          <p class="save-note" id="saveNote">进度会自动保存在此设备</p>
+        </section>
+
+        <section class="tips" aria-labelledby="tipsTitle">
+          <div class="section-head">
+            <h3 id="tipsTitle">林间手记</h3>
+            <span class="tip-mark" aria-hidden="true">✦</span>
+          </div>
+          <ul>
+            <li><span>01</span><p>每次移动一格。身后没有退路时，先绕到能量石背后。</p></li>
+            <li><span>02</span><p>只能推动<b>一块</b>能量石，不能拉，也不能推动墙壁。</p></li>
+            <li><span>03</span><p>所有机关亮起，石门开启。走入光中，即完成此处遗迹。</p></li>
+          </ul>
+          <p class="key-hint">方向键 / WASD 移动 · U 撤销 · R 重置</p>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <span>森语绘卷 · 森林遗迹</span>
+      <span class="footer-dot">✦</span>
+      <span>五处遗迹，一枚沉睡的森林之心</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="overlay" id="overlay" aria-live="polite"></div>
+
+  <script src="levels.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

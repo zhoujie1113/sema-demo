@@ -1,0 +1,58 @@
+# 推送到 main 时：构建所有带 build 脚本的项目，再把整个仓库发布到 GitHub Pages。
+# 构建产物（如 gpt6-demo/dist）不需要提交到仓库。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 遍历一级目录：有 package.json 且定义了 build 脚本的项目执行 npm ci && npm run build
+      - name: Build projects
+        run: |
+          set -e
+          for dir in */; do
+            dir="${dir%/}"
+            if [ -f "$dir/package.json" ] && node -e "process.exit(require('./$dir/package.json').scripts?.build ? 0 : 1)"; then
+              echo "== building $dir"
+              (cd "$dir" && npm ci && npm run build)
+            fi
+          done
+
+      # 组装站点目录：排除源码无关的大目录
+      - name: Assemble site
+        run: |
+          rsync -a --exclude .git --exclude .github --exclude node_modules --exclude .sema ./ _site/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

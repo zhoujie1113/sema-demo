@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sema Demo</title>
+  <meta name="description" content="用 Sema Code 一句输入从零生成的项目演示集：在线交互、查看提示词、模型与启动命令。">
+  <link rel="stylesheet" href="assets/site.css?v=20261022b">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span class="brand-text">Sema Demo</span>
+    </a>
+    <nav class="topbar-nav">
+      <a id="repo-link" href="#" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="app">
+    <section id="view-gallery" class="view">
+      <div class="hero">
+        <h1>一句输入，从零生成</h1>
+        <p>这里的每个项目都由 <strong>Sema Code</strong> 根据一段需求提示词从零生成。点开任意项目即可直接交互，并查看生成它所用的提示词、模型与启动命令。</p>
+      </div>
+      <div id="toolbar" class="toolbar" hidden>
+        <div id="tag-filter" class="chips" role="group" aria-label="按标签筛选"></div>
+        <div class="seg" role="group" aria-label="排序">
+          <button type="button" data-sort="default" aria-pressed="true">最新</button>
+          <button type="button" data-sort="duration" aria-pressed="false">用时</button>
+          <button type="button" data-sort="name" aria-pressed="false">名称</button>
+        </div>
+      </div>
+      <div id="cards" class="cards" aria-live="polite">
+        <p class="muted">正在加载项目列表…</p>
+      </div>
+    </section>
+
+    <section id="view-detail" class="view" hidden>
+      <div class="detail-bar">
+        <a class="btn btn-ghost" href="#/">← 返回列表</a>
+        <h2 id="d-name" class="detail-title"></h2>
+        <div class="detail-actions">
+          <button id="d-reload" class="btn btn-ghost" type="button" title="重新加载演示">重新加载</button>
+          <button id="d-toggle" class="btn btn-ghost" type="button" aria-pressed="false" title="显示/隐藏提示词、模型与启动命令">信息面板</button>
+          <a id="d-open" class="btn btn-ghost" href="#" target="_blank" rel="noopener">新窗口打开 ↗</a>
+          <button id="d-fullscreen" class="btn btn-primary" type="button" title="全屏显示演示">全屏</button>
+        </div>
+      </div>
+      <div class="detail-body">
+        <div class="frame-wrap">
+          <iframe id="d-frame" title="项目演示" allowfullscreen allow="fullscreen; clipboard-write"></iframe>
+          <p class="frame-hint">提示：先点击演示区域获得焦点，键盘操作才会生效。</p>
+        </div>
+        <aside id="d-panel" class="panel" hidden>
+          <section class="panel-sec">
+            <h3>简介</h3>
+            <p id="d-desc"></p>
+            <div id="d-tags" class="tags"></div>
+            <p id="d-author" class="muted small"></p>
+          </section>
+          <section class="panel-sec">
+            <h3>生成信息</h3>
+            <dl class="kv">
+              <dt>对话模型</dt><dd><code id="d-model"></code></dd>
+              <dt>生图模型</dt><dd><code id="d-image-model"></code></dd>
+              <dt>生成用时</dt><dd><code id="d-duration"></code></dd>
+            </dl>
+          </section>
+          <section class="panel-sec">
+            <h3>本地运行</h3>
+            <p class="muted small">在项目目录下执行：</p>
+            <div class="codeblock">
+              <pre id="d-run"></pre>
+              <button class="copy" type="button" data-copy="d-run">复制</button>
+            </div>
+            <p id="d-url-line" class="small">然后打开 <a id="d-url" href="#" target="_blank" rel="noopener"></a></p>
+            <p class="small"><a id="d-source" href="#" target="_blank" rel="noopener">查看源码 ↗</a></p>
+          </section>
+          <section class="panel-sec">
+            <h3>需求提示词</h3>
+            <div class="codeblock prompt">
+              <pre id="d-prompt"></pre>
+              <button class="copy" type="button" data-copy="d-prompt">复制</button>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-error" class="view" hidden>
+      <div class="hero">
+        <h1>没有找到这个项目</h1>
+        <p id="error-msg" class="muted"></p>
+        <p><a class="btn btn-primary" href="#/">返回列表</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>由 <a href="https://github.com/midea-ai/sema-code-core" target="_blank" rel="noopener">Sema Code</a> 生成</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <script src="assets/site.js?v=20261022b"></script>
+</body>
+</html>
