@@ -43,7 +43,7 @@ python3 -m http.server 8000
 
    model: deepseek-v4.1-flash-1017  # 生成时使用的对话模型
    image_model: gpt-image-2.5-flare # 生成时使用的生图模型，没有可留空
-   duration: 约 20 分钟              # 从零生成到可交付的用时
+   duration: 20min                  # 从零生成到可交付的用时，格式只能是 32min / 1h12min / 3h，其他写法视为未填写
 
    run: python3 -m http.server 8080 # 在项目目录下的本地启动命令
    url: http://127.0.0.1:8080/      # 启动后访问地址
@@ -60,16 +60,6 @@ python3 -m http.server 8000
 ## SemaWork：在浏览器里生成你的项目
 
 **SemaWork** 是 Sema Code 随仓库提供的本地 Web 界面（位于 [`webui/`](https://github.com/midea-ai/sema-code-core/tree/main/webui) 目录）：在浏览器里与 Agent 对话，驱动其对本地目录读写文件、执行命令，并可视化展示整个过程。本仓库中的 Demo 都是在 SemaWork 里输入一段需求提示词后生成的。
-
-<img src="https://github.com/midea-ai/sema-code-core/releases/download/docs-assets/webui.gif" alt="SemaWork" />
-
-### 功能亮点
-
-- **对话与工具可视化** — 流式回复、工具调用卡片、权限应答、待办列表
-- **代码审阅** — 查看会话中的文件改动 diff
-- **右侧面板** — 终端、内嵌浏览器、文件预览多标签并存
-- **任务面板** — 定时任务管理、快问旁路问答、子代理运行详情
-- **项目 / 会话管理** — 项目与独立会话两级组织，支持分支到新聊天、刷新与断线恢复
 
 ### 启动方式
 

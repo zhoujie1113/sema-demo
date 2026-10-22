@@ -46,7 +46,7 @@
       tags: Array.isArray(raw.tags) ? raw.tags : [],
       model: raw.model || '',
       imageModel: raw.image_model || raw.imageModel || '',
-      duration: raw.duration ? String(raw.duration) : '',
+      duration: parseMinutes(raw.duration) === Infinity ? '' : String(raw.duration).trim(),   // 格式不合规视为未设定
       durationMin: parseMinutes(raw.duration),
       run: raw.run || '',
       url: raw.url || '',
@@ -56,12 +56,14 @@
     };
   }
 
-  // “约 20 分钟” / “1 小时 10 分” / “45min” -> 分钟数，解析不出返回 Infinity（排序时放最后）
+  // 用时只接受规范格式：32min / 1h12min / 3h（h、min 均为非负整数，至少出现一个）。
+  // 返回分钟数；格式不合规（如“约 47 分钟”）返回 Infinity，视为未设定，排序时放最后。
+  var DURATION_RE = /^(?:(\d+)h)?(?:(\d+)min)?$/;
   function parseMinutes(v) {
     if (v == null) return Infinity;
-    var str = String(v), h = str.match(/(\d+(?:\.\d+)?)\s*(小时|h)/i), m = str.match(/(\d+(?:\.\d+)?)\s*(分钟|分|min)/i);
-    if (!h && !m) { var n = str.match(/\d+(?:\.\d+)?/); return n ? parseFloat(n[0]) : Infinity; }
-    return (h ? parseFloat(h[1]) * 60 : 0) + (m ? parseFloat(m[1]) : 0);
+    var m = String(v).trim().match(DURATION_RE);
+    if (!m || (m[1] == null && m[2] == null)) return Infinity;
+    return (m[1] ? parseInt(m[1], 10) * 60 : 0) + (m[2] ? parseInt(m[2], 10) : 0);
   }
 
   function loadPref() {

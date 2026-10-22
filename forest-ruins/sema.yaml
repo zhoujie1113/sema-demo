@@ -9,7 +9,7 @@ model: deepseek-v4.1-flash-1017
 image_model: gpt-image-2.5-flare
 
 # 从零生成到可交付的用时
-duration: 约 20 分钟
+duration: 20min
 
 # 本地启动命令（在本目录下执行），启动后用浏览器打开对应地址
 run: python3 -m http.server 8080
